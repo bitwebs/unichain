@@ -1,6 +1,6 @@
-var hypercore = require('./')
+var unichain = require('./')
 
-var feed = hypercore('./tmp', { valueEncoding: 'json' })
+var feed = unichain('./tmp', { valueEncoding: 'json' })
 
 feed.append({
   hello: 'world'

@@ -1,16 +1,14 @@
-# hypercore
+# unichain
 
-Hypercore is a secure, distributed append-only log.
+Unichain is a secure, distributed append-only log.
 
-Built for sharing large datasets and streams of real time data as part of the [Hypercore Protocol](https://hypercore-protocol.org).
+Built for sharing large datasets and streams of real time data as part of the [BIT Protocol](https://github.com/bitwebs/bit-protocol).
 
 ``` sh
-npm install hypercore
+npm install @web4/unichain
 ```
 
-[![Build Status](https://github.com/hypercore-protocol/hypercore/workflows/Build%20Status/badge.svg)](https://github.com/hypercore-protocol/hypercore/actions?query=workflow%3A%22Build+Status%22)
-
-To learn more about how hypercore works on a technical level read the [Dat paper](https://github.com/datprotocol/whitepaper/blob/master/dat-paper.pdf).
+To learn more about how unichain works on a technical level read the [BitWeb paper](https://github.com/bitwebs/whitepaper).
 
 ## Features
 
@@ -20,13 +18,13 @@ To learn more about how hypercore works on a technical level read the [Dat paper
 * **Secure.** Uses signed merkle trees to verify log integrity in real time.
 * **Browser support.** Simply pick a storage provider (like [random-access-memory](https://github.com/random-access-storage/random-access-memory)) that works in the browser
 
-Note that the latest release is Hypercore 8, which is not compatible with Hypercore 7 on the wire format, but storage compatible.
+Note that the latest release is Unichain 2, which is not compatible with Unichain 1 on the wire format, but storage compatible.
 
 ## Usage
 
 ``` js
-var hypercore = require('hypercore')
-var feed = hypercore('./my-first-dataset', {valueEncoding: 'utf-8'})
+var unichain = require('@web4/unichain')
+var feed = unichain('./my-first-dataset', {valueEncoding: 'utf-8'})
 
 feed.append('hello')
 feed.append('world', function (err) {
@@ -36,33 +34,33 @@ feed.append('world', function (err) {
 })
 ```
 
-To get find other modules that help with building data structures, P2P networks etc on top of Hypercore see the [companion modules](#Companion-modules) list at the bottom of this page.
+To get find other modules that help with building data structures, P2P networks etc on top of Unichain see the [companion modules](#Companion-modules) list at the bottom of this page.
 
 ## Terminology
 
- - **feed**. This is what hypercores are: a data feed. Feeds are permanent data structures that can be shared on the dat network.
+ - **feed**. This is what unichains are: a data feed. Feeds are permanent data structures that can be shared on the dat network.
  - **stream**. Streams are a tool in the code for reading or writing data. Streams are temporary and almost always returned by functions.
  - **pipe**. Streams tend to either be readable (giving data) or writable (receiving data). If you connect a readable to a writable, that's called piping.
- - **replication stream**. A stream returned by the `replicate()` function which can be piped to a peer. It is used to sync the peers' hypercore feeds.
+ - **replication stream**. A stream returned by the `replicate()` function which can be piped to a peer. It is used to sync the peers' unichain feeds.
  - **swarming**. Swarming describes adding yourself to the network, finding peers, and sharing data with them. Piping a replication feed describes sharing the data with one peer.
 
 ## API
 
-#### `var feed = hypercore(storage, [key], [options])`
+#### `var feed = unichain(storage, [key], [options])`
 
-Create a new hypercore feed.
+Create a new unichain feed.
 
 `storage` should be set to a directory where you want to store the data and feed metadata.
 
 ``` js
-var feed = hypercore('./directory') // store data in ./directory
+var feed = unichain('./directory') // store data in ./directory
 ```
 
-Alternatively you can pass a function instead that is called with every filename hypercore needs to function and return your own [abstract-random-access](https://github.com/random-access-storage/abstract-random-access) instance that is used to store the data.
+Alternatively you can pass a function instead that is called with every filename unichain needs to function and return your own [abstract-random-access](https://github.com/random-access-storage/abstract-random-access) instance that is used to store the data.
 
 ``` js
 var ram = require('random-access-memory')
-var feed = hypercore(function (filename) {
+var feed = unichain(function (filename) {
   // filename will be one of: data, bitfield, tree, signatures, key, secret_key
   // the data file will contain all your data concatenated.
 
@@ -71,16 +69,16 @@ var feed = hypercore(function (filename) {
 })
 ```
 
-Per default hypercore uses [random-access-file](https://github.com/random-access-storage/random-access-file). This is also useful if you want to store specific files in other directories. For example you might want to store the secret key elsewhere.
+Per default unichain uses [random-access-file](https://github.com/random-access-storage/random-access-file). This is also useful if you want to store specific files in other directories. For example you might want to store the secret key elsewhere.
 
-`key` can be set to a hypercore feed public key. If you do not set this the public key will be loaded from storage. If no key exists a new key pair will be generated.
+`key` can be set to a unichain feed public key. If you do not set this the public key will be loaded from storage. If no key exists a new key pair will be generated.
 
 `options` include:
 
 ``` js
 {
-  createIfMissing: true, // create a new hypercore key pair if none was present in storage
-  overwrite: false, // overwrite any old hypercore that might already exist
+  createIfMissing: true, // create a new unichain key pair if none was present in storage
+  overwrite: false, // overwrite any old unichain that might already exist
   valueEncoding: 'json' | 'utf-8' | 'binary', // defaults to binary
   sparse: false, // do not mark the entire feed to be downloaded
   eagerUpdate: true, // always fetch the latest update that is advertised. default false in sparse mode.
@@ -101,16 +99,16 @@ Per default hypercore uses [random-access-file](https://github.com/random-access
 
 You can also set valueEncoding to any [abstract-encoding](https://github.com/mafintosh/abstract-encoding) instance.
 
-__Note:__ The `[key]` and `secretKey` are _Node.js_ buffer instances, not browser-based ArrayBuffer instances. When creating hypercores in browser, if you pass an ArrayBuffer instance, you will get an error similar to `key must be at least 16, was given undefined`. Instead, create a Node.js Buffer instance using [Feross‘s](https://github.com/feross) [buffer](https://github.com/feross/buffer) module (`npm install buffer`). e.g.,
+__Note:__ The `[key]` and `secretKey` are _Node.js_ buffer instances, not browser-based ArrayBuffer instances. When creating unichains in browser, if you pass an ArrayBuffer instance, you will get an error similar to `key must be at least 16, was given undefined`. Instead, create a Node.js Buffer instance using [Feross‘s](https://github.com/feross) [buffer](https://github.com/feross/buffer) module (`npm install buffer`). e.g.,
 
 ```javascript
 const storage = someRandomAccessStorage
 const myPublicKey = someUint8Array
 
 const Buffer = require('buffer').Buffer
-const hypercorePublicKeyBuffer = Buffer.from(myPublicKey.buffer)
+const unichainPublicKeyBuffer = Buffer.from(myPublicKey.buffer)
 
-const hypercore = hypercore(storage, hypercorePublicKeyBuffer)
+const unichain = unichain(storage, unichainPublicKeyBuffer)
 ```
 
 #### `feed.append(data, [callback])`
@@ -318,14 +316,14 @@ Options include:
 
 #### `var stream = feed.replicate(isInitiator, [options])`
 
-Create a replication stream. You should pipe this to another hypercore instance.
+Create a replication stream. You should pipe this to another unichain instance.
 
 The `isInitiator` argument is a boolean indicating whether you are the iniatior of the connection (ie the client)
 or if you are the passive part (ie the server).
 
-If you are using a P2P swarm like [Hyperswarm](https://github.com/hyperswarm/hyperswarm) you can know this by checking if the swarm connection is a client socket or server socket. In Hyperswarm you can check that using [client property on the peer details object](https://github.com/hyperswarm/hyperswarm#swarmonconnection-socket-details--)
+If you are using a P2P swarm like [BitSwarm](https://github.com/bitwebs/bitswarm) you can know this by checking if the swarm connection is a client socket or server socket. In BitSwarm you can check that using [client property on the peer details object](https://github.com/bitwebs/bitswarm#swarmonconnection-socket-details--)
 
-If you want to multiplex the replication over an existing hypercore replication stream you can pass
+If you want to multiplex the replication over an existing unichain replication stream you can pass
 another stream instance instead of the `isInitiator` boolean.
 
 ``` js
@@ -349,7 +347,7 @@ Options include:
   ack: false, // set to true to get explicit acknowledgement when a peer has written a block
   download: true, // download data from peers?
   upload: true, // upload data to peers?
-  encrypted: true, // encrypt the data sent using the hypercore key pair
+  encrypted: true, // encrypt the data sent using the unichain key pair
   noise: true, // set to false to disable the NOISE handshake completely, and also disable the capability verification. works only together with encrypted = false.
   keyPair: { publicKey, secretKey }, // use this keypair for Noise authentication
   onauthenticate (remotePublicKey, done) // hook that can be used to authenticate the remote peer.
@@ -537,12 +535,12 @@ Emitted when the feed has been fully closed
 
 ## Companion modules
 
-Hypercore works really well with a series of other modules. This in a non-exhaustive list of some of those:
+Unichain works really well with a series of other modules. This in a non-exhaustive list of some of those:
 
-* [Hyperswarm](https://github.com/hyperswarm/hyperswarm) - P2P swarming module that can you share Hypercores over a network.
-* [Hyperswarm replicator](https://github.com/hyperswarm/replicator) - Wanna share a single Hypercore without any hastle over a network?
-* [Hyperdrive](https://github.com/hypercore-protocol/hyperdrive) - Filesystem abstraction built on Hypercores
-* [Hypertrie](https://github.com/hypercore-protocol/hypertrie) - Scalable key/value store built on Hypercores
+* [BitSwarm](https://github.com/bitwebs/bitswarn) - P2P swarming module that can you share Unichains over a network.
+* [BitSwarm replicator](https://github.com/bitwebs/replicator) - Wanna share a single Unichain without any hastle over a network?
+* [BitDrive](https://github.com/bitwebs/bitdrive) - Filesystem abstraction built on Unichain
+* [BitTrie](https://github.com/bitwebs/bittrie) - Scalable key/value store built on Unichain
 
 ## License
 

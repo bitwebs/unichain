@@ -1,10 +1,10 @@
-var hypercore = require('../')
+var unichain = require('../')
 var path = require('path')
 
-var source = hypercore(path.join(__dirname, 'cores/64kb'))
+var source = unichain(path.join(__dirname, 'cores/64kb'))
 
 source.ready(function () {
-  var dest = hypercore(path.join(__dirname, 'cores/64kb-copy'), source.key, { overwrite: true })
+  var dest = unichain(path.join(__dirname, 'cores/64kb-copy'), source.key, { overwrite: true })
   var then = Date.now()
 
   replicate(source, dest).on('end', function () {

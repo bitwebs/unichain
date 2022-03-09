@@ -10,17 +10,17 @@ var bitfield = require('./lib/bitfield')
 var sparseBitfield = require('sparse-bitfield')
 var treeIndex = require('./lib/tree-index')
 var storage = require('./lib/storage')
-var crypto = require('hypercore-crypto')
+var crypto = require('@web4/bitweb-crypto')
 var inspect = require('inspect-custom-symbol')
 var pretty = require('pretty-hash')
 var Nanoguard = require('nanoguard')
 var safeBufferEquals = require('./lib/safe-buffer-equals')
 var replicate = require('./lib/replicate')
-var Protocol = require('hypercore-protocol')
+var Protocol = require('@web4/bit-protocol')
 var Message = require('abstract-extension')
 var Nanoresource = require('nanoresource/emitter')
-var defaultStorage = require('hypercore-default-storage')
-var { WriteStream, ReadStream } = require('hypercore-streams')
+var defaultStorage = require('@web4/unichain-default-storage')
+var { WriteStream, ReadStream } = require('@web4/unichain-streams')
 
 class Extension extends Message {
   broadcast (message) {
@@ -172,7 +172,7 @@ Feed.prototype[inspect] = function (depth, opts) {
   if (typeof opts.indentationLvl === 'number') {
     while (indent.length < opts.indentationLvl) indent += ' '
   }
-  return 'Hypercore(\n' +
+  return 'Unichain(\n' +
     indent + '  key: ' + opts.stylize((this.key && pretty(this.key)), 'string') + '\n' +
     indent + '  discoveryKey: ' + opts.stylize((this.discoveryKey && pretty(this.discoveryKey)), 'string') + '\n' +
     indent + '  opened: ' + opts.stylize(this.opened, 'boolean') + '\n' +
@@ -479,7 +479,7 @@ Feed.prototype._open = function (cb) {
     self._seq = self.length
 
     if (state.key && self.key && Buffer.compare(state.key, self.key) !== 0) {
-      return self._forceClose(cb, new Error('Another hypercore is stored here'))
+      return self._forceClose(cb, new Error('Another unichain is stored here'))
     }
 
     if (state.key) self.key = state.key
@@ -492,7 +492,7 @@ Feed.prototype._open = function (cb) {
       if (self.length) self.live = !!sig
 
       if ((generatedKey || !self.key) && !self._createIfMissing) {
-        return self._forceClose(cb, new Error('No hypercore is stored here'))
+        return self._forceClose(cb, new Error('No unichain is stored here'))
       }
 
       if (!self.key && self.live) {
@@ -1282,7 +1282,7 @@ Feed.prototype.get = function (index, opts, cb) {
   if (typeof opts === 'function') return this.get(index, null, opts)
 
   opts = { ...opts }
-  if (!opts.cancel) opts.cancel = Symbol('hypercore-get')
+  if (!opts.cancel) opts.cancel = Symbol('unichain-get')
 
   if (!this.opened) return this._readyAndGet(index, opts, cb)
 

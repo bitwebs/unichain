@@ -1,7 +1,7 @@
 var create = require('./helpers/create')
 var replicate = require('./helpers/replicate')
 var tape = require('tape')
-var Protocol = require('hypercore-protocol')
+var Protocol = require('@web4/bit-protocol')
 
 tape('replicate', function (t) {
   t.plan(10)

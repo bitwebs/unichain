@@ -1,8 +1,8 @@
 var path = require('path')
-var hypercore = require('../../')
+var unichain = require('../../')
 
 module.exports = function (dir, proof) {
-  var feed = hypercore(path.join(__dirname, '../cores', dir))
+  var feed = unichain(path.join(__dirname, '../cores', dir))
 
   var then = Date.now()
   var size = 0
