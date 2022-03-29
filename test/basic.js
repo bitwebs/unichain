@@ -1,6 +1,6 @@
 var create = require('./helpers/create')
 var createTrackingRam = require('./helpers/create-tracking-ram')
-var crypto = require('@web4/bitweb-crypto')
+var crypto = require('@web4/crypto')
 var tape = require('tape')
 var hypercore = require('../')
 var ram = require('random-access-memory')
